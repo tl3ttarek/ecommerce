@@ -1,5 +1,5 @@
 import { Col, Container, Row } from "react-bootstrap";
-import homeImage from "../../images/landing.webp";
+import homeImage from "../../logo.svg";
 import { Link } from "react-router-dom";
 
 function Home() {
@@ -31,4 +31,4 @@ function Home() {
   );
 }
 
-export default Home; 
+export default Home;

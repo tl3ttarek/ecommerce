@@ -3,16 +3,14 @@ import { faStar } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import { Link, useParams } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { addToCart } from "../../store/slices/cart-slice";
 import { AddedToCartMsg } from "../UsersMsg/AddedToCartMsg";
+import { useCart } from "../../CartContext";
 
 function ProductDetails() {
-  const dispacth = useDispatch();
-
   const apiUrl = "https://fakestoreapi.com/products";
   const { productId } = useParams();
   let [product, setProduct] = useState([]);
+    const { addToCart } = useCart();
 
   useEffect(() => {
     fetch(`${apiUrl}/${productId}`)
@@ -50,7 +48,7 @@ function ProductDetails() {
             variant="dark"
             className="me-3"
             onClick={() => {
-              dispacth(addToCart(product));
+              addToCart(product);
               AddedToCartMsg();
             }}
           >
@@ -65,4 +63,4 @@ function ProductDetails() {
   );
 }
 
-export default ProductDetails; 
+export default ProductDetails;

@@ -1,12 +1,11 @@
 import { Button, Card, Col, Row, Spinner } from "react-bootstrap";
-import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
-import { addToCart } from "../../store/slices/cart-slice";
 import { AddedToCartMsg } from "../UsersMsg/AddedToCartMsg";
+import { useCart } from "../../CartContext";
 
 function Product(props) {
   let products = props.products;
-  const dispacth = useDispatch();
+  const { addToCart } = useCart() || {};
 
   return (
     <Row className="justify-content-center">
@@ -43,7 +42,7 @@ function Product(props) {
                   <Button
                     variant="dark"
                     onClick={() => {
-                      dispacth(addToCart(product));
+                      addToCart && addToCart(product);
                       AddedToCartMsg();
                     }}
                   >
@@ -59,4 +58,4 @@ function Product(props) {
   );
 }
 
-export default Product; 
+export default Product;

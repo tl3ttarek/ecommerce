@@ -1,35 +1,34 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Button, Container } from "react-bootstrap";
-import {
-  fetchAllProducts,
-  fetchElectroProducts,
-  fetchJeweleryProducts,
-  fetchMensProducts,
-  fetchWomensProducts,
-} from "../../store/slices/products-slice";
-import { useDispatch, useSelector } from "react-redux";
 import Product from "./Product";
 
 function ProductsList() {
-  const products = useSelector((state) => state.products);
-  const dispacth = useDispatch();
+  const [products, setProducts] = useState([]);
 
-  useEffect(getAll, [dispacth]);
+  useEffect(() => {
+    getAll();
+  }, []);
 
-  function getAll() {
-    dispacth(fetchAllProducts());
+  async function getAll() {
+    try {
+      const response = await fetch("https://fakestoreapi.com/products");
+      const data = await response.json();
+      setProducts(data);
+    } catch (error) {
+      console.error("Error fetching products:", error);
+    }
   }
-  function getMens() {
-    dispacth(fetchMensProducts("men's clothing"));
-  }
-  function getWomens() {
-    dispacth(fetchWomensProducts("women's clothing"));
-  }
-  function getJewelery() {
-    dispacth(fetchJeweleryProducts("jewelery"));
-  }
-  function getElectro() {
-    dispacth(fetchElectroProducts("electronics"));
+
+  async function getCategory(category) {
+    try {
+      const response = await fetch(
+        `https://fakestoreapi.com/products/category/${category}`
+      );
+      const data = await response.json();
+      setProducts(data);
+    } catch (error) {
+      console.error(`Error fetching ${category} products:`, error);
+    }
   }
 
   return (
@@ -40,16 +39,16 @@ function ProductsList() {
         <Button variant="outline-dark" onClick={getAll}>
           All
         </Button>
-        <Button variant="outline-dark" onClick={getMens}>
+        <Button variant="outline-dark" onClick={() => getCategory("men's clothing")}>
           Men's Clothing
         </Button>
-        <Button variant="outline-dark" onClick={getWomens}>
+        <Button variant="outline-dark" onClick={() => getCategory("women's clothing")}>
           Women's Clothing
         </Button>
-        <Button variant="outline-dark" onClick={getJewelery}>
+        <Button variant="outline-dark" onClick={() => getCategory("jewelery")}>
           Jewelery
         </Button>
-        <Button variant="outline-dark" onClick={getElectro}>
+        <Button variant="outline-dark" onClick={() => getCategory("electronics")}>
           Electronics
         </Button>
       </div>
@@ -58,4 +57,4 @@ function ProductsList() {
   );
 }
 
-export default ProductsList; 
+export default ProductsList;

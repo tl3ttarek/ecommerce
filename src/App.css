@@ -1,5 +1,7 @@
 body {
   user-select: none;
+  background-color: #f8f9fa; /* Light gray background */
+  color: #343a40; /* Dark gray text */
 }
 @media (max-width: 576px) {
   .col-text {
@@ -54,4 +56,50 @@ body {
 .swal2-confirm {
   background-color: #fff !important;
   color: #000 !important;
+}
+
+/* Button Styles */
+.btn-primary {
+  background-color: #007bff; /* Blue */
+  border-color: #007bff;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+  border-color: #0056b3;
+}
+
+.btn-secondary {
+  background-color: #6c757d; /* Gray */
+  border-color: #6c757d;
+  color: #fff;
+}
+
+.btn-secondary:hover {
+  background-color: #545b62;
+  border-color: #545b62;
+}
+
+.btn-outline-dark {
+  color: #343a40;
+  border-color: #343a40;
+}
+
+.btn-outline-dark:hover {
+  background-color: #343a40;
+  color: #fff;
+}
+
+/* Navbar Styles */
+.bg-body-tertiary {
+  background-color: #e9ecef !important; /* Light gray navbar */
+}
+
+/* Link Styles */
+a {
+  color: #007bff;
+}
+
+a:hover {
+  color: #0056b3;
 }

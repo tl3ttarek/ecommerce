@@ -5,15 +5,14 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Button, Card, Col, Container, Row } from "react-bootstrap";
-import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { addToQuntity, subFromQuntity } from "../../store/slices/cart-slice";
 import OrderSummary from "./OrderSummary";
+import { useCart } from "../../CartContext";
+
 export let totalAmount;
 
 function Cart() {
-  const cart = useSelector((state) => state.cart);
-  const dispacth = useDispatch();
+  const { cart } = useCart();
 
   totalAmount = cart.reduce((curr, acc) => {
     curr += acc.price * acc.quantity;
@@ -58,10 +57,7 @@ function Cart() {
                   </Col>
                   <Col>
                     <div className="d-flex align-items-center justify-content-center gap-4">
-                      <Button
-                        variant="outline-dark"
-                        onClick={() => dispacth(addToQuntity(product))}
-                      >
+                      <Button variant="outline-dark">
                         <FontAwesomeIcon icon={faPlus} />
                       </Button>
                       <div className="d-flex flex-column align-items-center ">
@@ -72,10 +68,7 @@ function Cart() {
                           {product.quantity} X {product.price}$
                         </p>
                       </div>
-                      <Button
-                        variant="outline-dark"
-                        onClick={() => dispacth(subFromQuntity(product))}
-                      >
+                      <Button variant="outline-dark">
                         <FontAwesomeIcon icon={faMinus} />
                       </Button>
                     </div>
@@ -93,4 +86,4 @@ function Cart() {
   );
 }
 
-export default Cart; 
+export default Cart;

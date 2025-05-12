@@ -32,4 +32,4 @@ function OrderSummary(props) {
   );
 }
 
-export default OrderSummary; 
+export default OrderSummary;

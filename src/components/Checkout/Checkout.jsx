@@ -1,12 +1,11 @@
 import { Container } from "react-bootstrap";
-import { useSelector } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import CheckoutBody from "./CheckoutBody";
 
 function Checkout() {
-  const cart = useSelector((state) => state.cart);
+  const cart = [];
 
   return (
     <Container className="mb-3">
@@ -30,4 +29,4 @@ function Checkout() {
   );
 }
 
-export default Checkout; 
+export default Checkout;

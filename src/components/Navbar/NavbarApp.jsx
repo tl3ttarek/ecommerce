@@ -7,10 +7,8 @@ import {
   faUserPlus,
 } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
 
 function NavbarApp() {
-  const cart = useSelector((state) => state.cart);
   return (
     <Navbar expand="lg" className="bg-body-tertiary p-4" sticky="top">
       <Container>
@@ -47,11 +45,6 @@ function NavbarApp() {
           <Link to={"/cart"} className="btn btn-outline-dark btn-cart">
             <FontAwesomeIcon icon={faCartShopping} className="me-1" />
             Cart
-            {cart.length !== 0 ? (
-              <div className="cart-num">
-                <p>{cart.length}</p>
-              </div>
-            ) : null}
           </Link>
         </Navbar.Collapse>
       </Container>
@@ -59,4 +52,4 @@ function NavbarApp() {
   );
 }
 
-export default NavbarApp; 
+export default NavbarApp;
