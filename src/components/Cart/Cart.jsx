@@ -12,11 +12,10 @@ import { useCart } from "../../CartContext";
 export let totalAmount;
 
 function Cart() {
-  const { cart } = useCart();
+  const { cart, increaseQuantity, decreaseQuantity } = useCart();
 
-  totalAmount = cart.reduce((curr, acc) => {
-    curr += acc.price * acc.quantity;
-    return curr;
+  totalAmount = cart.reduce((total, item) => {
+    return total + (item.price * (item.quantity || 1));
   }, 0);
 
   return (
@@ -36,7 +35,7 @@ function Cart() {
         <Row>
           <Col lg={8} md={6} sm={6}>
             {cart.map((product) => (
-              <Card key={product.id} className="my-5">
+              <Card key={`${product.id}-${product.selectedColor}-${product.selectedSize}`} className="my-5">
                 <Row className="align-items-center">
                   <Col>
                     <div className="d-flex justify-content-center p-2">
@@ -54,21 +53,37 @@ function Cart() {
                     <Card.Title className="text-center">
                       {product.title}
                     </Card.Title>
+                    {product.selectedColor && product.selectedSize && (
+                      <div className="text-center mt-2">
+                        <span className="badge bg-dark me-2">
+                          Color: {product.selectedColor}
+                        </span>
+                        <span className="badge bg-dark">
+                          Size: {product.selectedSize}
+                        </span>
+                      </div>
+                    )}
                   </Col>
                   <Col>
                     <div className="d-flex align-items-center justify-content-center gap-4">
-                      <Button variant="outline-dark">
+                      <Button 
+                        variant="outline-dark"
+                        onClick={() => increaseQuantity(product.id, product.selectedColor, product.selectedSize)}
+                      >
                         <FontAwesomeIcon icon={faPlus} />
                       </Button>
                       <div className="d-flex flex-column align-items-center ">
                         <p className="fs-4 fw-bold" style={{ margin: "0" }}>
-                          {product.quantity}
+                          {product.quantity || 1}
                         </p>
                         <p className="fw-bold">
-                          {product.quantity} X {product.price}$
+                          {product.quantity || 1} X {product.price}$
                         </p>
                       </div>
-                      <Button variant="outline-dark">
+                      <Button 
+                        variant="outline-dark"
+                        onClick={() => decreaseQuantity(product.id, product.selectedColor, product.selectedSize)}
+                      >
                         <FontAwesomeIcon icon={faMinus} />
                       </Button>
                     </div>
