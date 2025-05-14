@@ -7,6 +7,14 @@ function Product(props) {
   let products = props.products;
   const { addToCart } = useCart() || {};
 
+  const buttonStyle = {
+    background: "linear-gradient(135deg, #2c3e50 0%, #4ca1af 100%)",
+    border: "none",
+    padding: "8px 20px",
+    fontWeight: "500",
+    color: "white",
+  };
+
   return (
     <Row className="justify-content-center">
       {products === undefined ? (
@@ -36,11 +44,15 @@ function Product(props) {
                 </Card.Text>
                 <hr />
                 <div className="d-flex justify-content-around">
-                  <Link to={`/products/${product.id}`} className="btn btn-dark">
+                  <Link
+                    to={`/products/${product.id}`}
+                    className="btn"
+                    style={buttonStyle}
+                  >
                     Buy Now
                   </Link>
                   <Button
-                    variant="dark"
+                    style={buttonStyle}
                     onClick={() => {
                       addToCart && addToCart(product);
                       AddedToCartMsg();

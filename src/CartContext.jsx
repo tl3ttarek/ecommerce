@@ -11,17 +11,17 @@ export const CartProvider = ({ children }) => {
 
   const addToCart = (product) => {
     const existingProduct = cart.find(
-      (item) => 
-        item.id === product.id && 
-        item.selectedColor === product.selectedColor && 
+      (item) =>
+        item.id === product.id &&
+        item.selectedColor === product.selectedColor &&
         item.selectedSize === product.selectedSize
     );
 
     if (existingProduct) {
       setCart(
         cart.map((item) =>
-          item.id === product.id && 
-          item.selectedColor === product.selectedColor && 
+          item.id === product.id &&
+          item.selectedColor === product.selectedColor &&
           item.selectedSize === product.selectedSize
             ? { ...item, quantity: item.quantity + 1 }
             : item
@@ -39,8 +39,8 @@ export const CartProvider = ({ children }) => {
   const increaseQuantity = (productId, selectedColor, selectedSize) => {
     setCart(
       cart.map((item) =>
-        item.id === productId && 
-        item.selectedColor === selectedColor && 
+        item.id === productId &&
+        item.selectedColor === selectedColor &&
         item.selectedSize === selectedSize
           ? { ...item, quantity: item.quantity + 1 }
           : item
@@ -51,8 +51,8 @@ export const CartProvider = ({ children }) => {
   const decreaseQuantity = (productId, selectedColor, selectedSize) => {
     setCart(
       cart.map((item) =>
-        item.id === productId && 
-        item.selectedColor === selectedColor && 
+        item.id === productId &&
+        item.selectedColor === selectedColor &&
         item.selectedSize === selectedSize
           ? { ...item, quantity: Math.max(1, item.quantity - 1) }
           : item

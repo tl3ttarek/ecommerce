@@ -28,7 +28,16 @@ function Register() {
           </Link>
         </p>
         <div className="text-center">
-          <Button variant="dark" type="submit">
+          <Button
+            variant="primary"
+            type="submit"
+            style={{
+              background: "linear-gradient(135deg, #2c3e50 0%, #4ca1af 100%)",
+              border: "none",
+              padding: "8px 20px",
+              fontWeight: "500",
+            }}
+          >
             Register
           </Button>
         </div>

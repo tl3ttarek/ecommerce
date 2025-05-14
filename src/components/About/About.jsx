@@ -17,13 +17,19 @@ function About() {
       <Row>
         <Col className="m-2">
           <Card>
-            <Card.Img variant="top" src="https://fakestoreapi.com/img/71YXzeOuslL._AC_UY879_.jpg" />
+            <Card.Img
+              variant="top"
+              src="https://fakestoreapi.com/img/71YXzeOuslL._AC_UY879_.jpg"
+            />
             <Card.Title className="text-center p-3">Mens's Clothing</Card.Title>
           </Card>
         </Col>
         <Col className="m-2">
           <Card>
-            <Card.Img variant="top" src="https://fakestoreapi.com/img/71pWzhdJNwL._AC_UL640_QL65_ML3_.jpg" />
+            <Card.Img
+              variant="top"
+              src="https://stayyclassyy.weebly.com/uploads/5/1/6/0/51607479/9995846_orig.png"
+            />
             <Card.Title className="text-center p-3">
               Women's Clothing
             </Card.Title>
@@ -31,13 +37,19 @@ function About() {
         </Col>
         <Col className="m-2">
           <Card>
-            <Card.Img variant="top" src="https://fakestoreapi.com/img/71YAIFU48IL._AC_UL640_QL65_ML3_.jpg" />
+            <Card.Img
+              variant="top"
+              src="https://fakestoreapi.com/img/71YAIFU48IL._AC_UL640_QL65_ML3_.jpg"
+            />
             <Card.Title className="text-center p-3">Jewelery</Card.Title>
           </Card>
         </Col>
         <Col className="m-2">
           <Card>
-            <Card.Img variant="top" src="https://fakestoreapi.com/img/61IBBVJvSDL._AC_SY879_.jpg" />
+            <Card.Img
+              variant="top"
+              src="https://fakestoreapi.com/img/61IBBVJvSDL._AC_SY879_.jpg"
+            />
             <Card.Title className="text-center p-3">Electronics</Card.Title>
           </Card>
         </Col>

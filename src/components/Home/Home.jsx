@@ -14,7 +14,17 @@ function Home() {
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum
             facere doloremque veritatis odit similique sequi.
           </p>
-          <Link className="btn btn-dark my-3" to={"/products"}>
+          <Link
+            to={"/products"}
+            className="btn my-3"
+            style={{
+              background: "linear-gradient(135deg, #2c3e50 0%, #4ca1af 100%)",
+              border: "none",
+              padding: "8px 20px",
+              fontWeight: "500",
+              color: "white",
+            }}
+          >
             Start Shopping
           </Link>
         </Col>
