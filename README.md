@@ -1,6 +1,6 @@
 # E-Commerce Frontend
 
-A modern e-commerce frontend built with React, Redux, and Bootstrap. This project provides a complete shopping experience with features like product browsing, cart management, and checkout process.
+A modern e-commerce frontend built with React. This project provides a complete shopping experience with features like product browsing, cart management, and checkout process.
 
 ## Features
 
