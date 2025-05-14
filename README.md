@@ -16,7 +16,6 @@ A modern e-commerce frontend built with React, Redux, and Bootstrap. This projec
 ## Tech Stack
 
 - React.js
-- Redux Toolkit for state management
 - React Router for navigation
 - Bootstrap for styling
 - FontAwesome for icons
