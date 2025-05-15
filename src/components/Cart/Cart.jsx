@@ -8,7 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Button, Card, Col, Container, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import OrderSummary from "./OrderSummary";
-import { useCart } from "../../CartContext";
+import { useCart } from "../../contexts/CartContext";
 
 export let totalAmount;
 

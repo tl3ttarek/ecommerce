@@ -8,24 +8,27 @@ import ProductsList from "./components/Products/ProductsList";
 import ProductDetails from "./components/Products/ProductDetails";
 import Cart from "./components/Cart/Cart";
 import Checkout from "./components/Checkout/Checkout";
-import { CartProvider } from "./CartContext";
+import { AuthProvider } from "./contexts/AuthContext";
+import { CartProvider } from "./contexts/CartContext";
 
 function App() {
   return (
     <div className="App">
-      <CartProvider>
-        <NavbarApp />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/products" element={<ProductsList />} />
-          <Route path="/products/:productId" element={<ProductDetails />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/cart" element={<Cart />} />
-          <Route path="/checkout" element={<Checkout />} />
-        </Routes>
-      </CartProvider>
+      <AuthProvider>
+        <CartProvider>
+          <NavbarApp />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/products" element={<ProductsList />} />
+            <Route path="/products/:productId" element={<ProductDetails />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/cart" element={<Cart />} />
+            <Route path="/checkout" element={<Checkout />} />
+          </Routes>
+        </CartProvider>
+      </AuthProvider>
     </div>
   );
 }

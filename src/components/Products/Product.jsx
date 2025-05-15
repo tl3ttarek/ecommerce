@@ -1,7 +1,7 @@
 import { Button, Card, Col, Row, Spinner } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { AddedToCartMsg } from "../UsersMsg/AddedToCartMsg";
-import { useCart } from "../../CartContext";
+import { useCart } from "../../contexts/CartContext";
 
 function Product(props) {
   let products = props.products;

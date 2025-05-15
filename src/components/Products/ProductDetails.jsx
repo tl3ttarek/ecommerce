@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { Container, Row, Col, Button, Form } from "react-bootstrap";
 import { Link, useParams } from "react-router-dom";
 import { AddedToCartMsg } from "../UsersMsg/AddedToCartMsg";
-import { useCart } from "../../CartContext";
+import { useCart } from "../../contexts/CartContext";
 
 function ProductDetails() {
   const apiUrl = "https://fakestoreapi.com/products";
@@ -59,7 +59,7 @@ function ProductDetails() {
           </p>
           <p className="display-6">{product.price}$</p>
           <p className="text-black-50">{product.description}</p>
-          
+
           {/* Color Selection */}
           <Form.Group className="mb-3">
             <Form.Label>Select Color</Form.Label>
@@ -94,11 +94,7 @@ function ProductDetails() {
             </div>
           </Form.Group>
 
-          <Button
-            variant="dark"
-            className="me-3"
-            onClick={handleAddToCart}
-          >
+          <Button variant="dark" className="me-3" onClick={handleAddToCart}>
             Add to Cart
           </Button>
           <Link to={"/cart"} className="btn btn-dark">
