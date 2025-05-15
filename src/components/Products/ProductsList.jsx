@@ -1,40 +1,64 @@
 import { useEffect, useState } from "react";
 import { Button, Container } from "react-bootstrap";
 import Product from "./Product";
+import { config } from "../../config";
 
 function ProductsList() {
+  const [allProducts, setAllProducts] = useState([]);
   const [products, setProducts] = useState([]);
   const [activeCategory, setActiveCategory] = useState("all");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     getAll();
   }, []);
 
   async function getAll() {
+    setLoading(true);
+    setError(null);
+
     try {
-      const response = await fetch("https://fakestoreapi.com/products");
-      const data = await response.json();
-      setProducts(data);
+      const token = localStorage.getItem("accessToken");
+      const response = await fetch(`${config.apiUrl}/v1/products`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      const fetchedProducts = result?.data || [];
+
+      setAllProducts(fetchedProducts);
+      setProducts(fetchedProducts);
       setActiveCategory("all");
-    } catch (error) {
-      console.error("Error fetching products:", error);
+    } catch (err) {
+      console.error("Fetch error:", err);
+      setError("Failed to load products.");
+    } finally {
+      setLoading(false);
     }
   }
 
-  async function getCategory(category) {
-    try {
-      const response = await fetch(
-        `https://fakestoreapi.com/products/category/${category}`
+  function filterByCategory(categoryName) {
+    setActiveCategory(categoryName);
+
+    if (categoryName === "all") {
+      setProducts(allProducts);
+    } else {
+      const filtered = allProducts.filter(
+        (product) =>
+          product.categoryName &&
+          product.categoryName.toLowerCase() === categoryName.toLowerCase()
       );
-      const data = await response.json();
-      setProducts(data);
-      setActiveCategory(category);
-    } catch (error) {
-      console.error(`Error fetching ${category} products:`, error);
+      setProducts(filtered);
     }
   }
 
-  // Button styling with hover effects
   const buttonStyle = (category) => ({
     background:
       activeCategory === category
@@ -45,11 +69,6 @@ function ProductsList() {
     padding: "8px 16px",
     fontWeight: "500",
     transition: "all 0.3s ease",
-    ":hover": {
-      background: "linear-gradient(135deg, #2c3e50 0%, #4ca1af 100%)",
-      color: "white",
-      borderColor: "#2c3e50",
-    },
   });
 
   return (
@@ -59,41 +78,51 @@ function ProductsList() {
       <div className="d-flex justify-content-center gap-3 my-4 filter-btn flex-wrap">
         <Button
           style={buttonStyle("all")}
-          onClick={getAll}
+          onClick={() => filterByCategory("all")}
           className="category-btn"
         >
           All
         </Button>
         <Button
-          style={buttonStyle("men's clothing")}
-          onClick={() => getCategory("men's clothing")}
+          style={buttonStyle("Men's Clothing")}
+          onClick={() => filterByCategory("Men's Clothing")}
           className="category-btn"
         >
           Men's Clothing
         </Button>
         <Button
-          style={buttonStyle("women's clothing")}
-          onClick={() => getCategory("women's clothing")}
+          style={buttonStyle("Women's Clothing")}
+          onClick={() => filterByCategory("Women's Clothing")}
           className="category-btn"
         >
           Women's Clothing
         </Button>
         <Button
-          style={buttonStyle("jewelery")}
-          onClick={() => getCategory("jewelery")}
+          style={buttonStyle("Accessories")}
+          onClick={() => filterByCategory("Accessories")}
           className="category-btn"
         >
-          Jewelery
+          Accessories
         </Button>
         <Button
-          style={buttonStyle("electronics")}
-          onClick={() => getCategory("electronics")}
+          style={buttonStyle("Footwear")}
+          onClick={() => filterByCategory("Footwear")}
           className="category-btn"
         >
-          Electronics
+          Footwear
+        </Button>
+        <Button
+          style={buttonStyle("Outerwear")}
+          onClick={() => filterByCategory("Outerwear")}
+          className="category-btn"
+        >
+          Outerwear
         </Button>
       </div>
-      <Product products={products} />
+
+      {loading && <p className="text-center">Loading products...</p>}
+      {error && <p className="text-danger text-center">{error}</p>}
+      {!loading && !error && <Product products={products} />}
     </Container>
   );
 }

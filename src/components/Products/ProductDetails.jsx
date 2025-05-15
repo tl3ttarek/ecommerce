@@ -1,37 +1,101 @@
+import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faStar } from "@fortawesome/free-solid-svg-icons";
-import { useEffect, useState } from "react";
+// import { faStar } from "@fortawesome/free-solid-svg-icons";
 import { Container, Row, Col, Button, Form } from "react-bootstrap";
 import { Link, useParams } from "react-router-dom";
 import { AddedToCartMsg } from "../UsersMsg/AddedToCartMsg";
 import { useCart } from "../../contexts/CartContext";
+import { config } from "../../config";
 
 function ProductDetails() {
-  const apiUrl = "https://fakestoreapi.com/products";
   const { productId } = useParams();
-  let [product, setProduct] = useState([]);
+  const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const { addToCart } = useCart();
   const [selectedColor, setSelectedColor] = useState("");
   const [selectedSize, setSelectedSize] = useState("");
 
   // Sample colors and sizes - you can modify these based on your needs
-  const colors = ["Red", "Blue", "Black", "White", "Green"];
+  const colors = ["Black", "White", "Red", "Blue", "Green"];
   const sizes = ["S", "M", "L", "XL", "XXL"];
 
+  const accessToken = localStorage.getItem("accessToken"); // Assuming it's in localStorage
+
   useEffect(() => {
-    fetch(`${apiUrl}/${productId}`)
-      .then((res) => res.json())
-      .then((data) => setProduct(data));
-  }, [productId]);
+    const fetchProductDetails = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const response = await fetch(
+          `${config.apiUrl}/v1/products/${productId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(
+            errorData.message || "Failed to fetch product details"
+          );
+        }
+        const data = await response.json();
+        setProduct(data.data);
+      } catch (error) {
+        setError(error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProductDetails();
+  }, [productId, accessToken]);
 
   const handleAddToCart = () => {
     if (!selectedColor || !selectedSize) {
       alert("Please select both color and size");
       return;
     }
-    addToCart({ ...product, selectedColor, selectedSize });
+    //  addToCart expects an object with product details, not just the ID.
+    //  We need to pass the necessary product information.
+    addToCart({
+      id: product.id,
+      name: product.name,
+      price: 0, // You might not have price in your new product data, or it might be in a different field.
+      selectedColor: selectedColor,
+      selectedSize: selectedSize,
+      quantity: 1, // Or get quantity from input if you add that functionality
+      pictureUrl: product.pictureUrl,
+    });
     AddedToCartMsg();
   };
+
+  if (loading) {
+    return (
+      <Container className="my-5 text-center">
+        <p>Loading product details...</p>
+        {/* You can add a more sophisticated loader here, like a spinner */}
+      </Container>
+    );
+  }
+
+  if (error) {
+    return (
+      <Container className="my-5 text-center">
+        <p className="text-danger">Error: {error}</p>
+      </Container>
+    );
+  }
+
+  if (!product) {
+    return (
+      <Container className="my-5 text-center">
+        <p>Product not found.</p>
+      </Container>
+    );
+  }
 
   return (
     <Container>
@@ -40,24 +104,21 @@ function ProductDetails() {
           <div>
             <img
               className="img-fluid product-image"
-              src={product.image}
-              alt={product.title}
+              src={product.pictureUrl}
+              alt={product.name}
               style={{ width: "350px", height: "400px" }}
             />
           </div>
         </Col>
         <Col lg={6} md={6} sm={12}>
-          <h6 className="fs-5 text-black-50">
-            {product.category !== undefined
-              ? product.category.toUpperCase()
-              : null}
-          </h6>
-          <h1 className="display-5">{product.title}</h1>
-          <p className="fs-4">
+          <h6 className="fs-5 text-black-50">{product.categoryName}</h6>
+          <h1 className="display-5">{product.name}</h1>
+          {/* <p className="fs-4">
             {product.rating !== undefined ? product.rating.rate : null}
             <FontAwesomeIcon className="ms-1" fontSize={22} icon={faStar} />
-          </p>
-          <p className="display-6">{product.price}$</p>
+          </p> */}
+          {/* Removed price. */}
+          {/* <p className="display-6">${product.price}</p> */}
           <p className="text-black-50">{product.description}</p>
 
           {/* Color Selection */}

@@ -1,5 +1,5 @@
 import { Button, Container, Form, Alert } from "react-bootstrap";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useAuth } from "../../contexts/AuthContext"; // Import the useAuth hook
 
@@ -15,7 +15,6 @@ function Login() {
 
     try {
       await signIn({ email, password });
-      // If signIn is successful, the context should handle navigation (e.g., to "/")
     } catch (error) {
       setErrorMessage(
         error.message || "Login failed. Please check your credentials."

@@ -5,11 +5,11 @@ const MySwal = withReactContent(Swal);
 
 export function AddedToCartMsg() {
   MySwal.fire({
-    position: "center",
+    title: "Success!",
+    text: "Item added to your cart.",
     icon: "success",
-    title: "Added To Your Cart",
-    showConfirmButton: true,
-    timer: 2000,
-    iconColor: "#fff",
+    iconColor: "#66bb6a",
+    showConfirmButton: false,
+    timer: 1500,
   });
 }

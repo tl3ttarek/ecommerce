@@ -1,3 +1,4 @@
+import React from "react";
 import {
   faArrowLeft,
   faMinus,
@@ -9,23 +10,29 @@ import { Button, Card, Col, Container, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import OrderSummary from "./OrderSummary";
 import { useCart } from "../../contexts/CartContext";
+import { useAuth } from "../../contexts/AuthContext";
 
 export let totalAmount;
 
 function Cart() {
-  const { cart, increaseQuantity, decreaseQuantity, removeFromCart } =
-    useCart();
+  const { cart, addToCart, removeFromCart } = useCart();
+  const { user } = useAuth();
 
+  // Calculate totalAmount within the component whenever the cart changes
   totalAmount = cart.reduce((total, item) => {
     return total + item.price * (item.quantity || 1);
   }, 0);
 
   const handleDecrease = (product) => {
     if (product.quantity > 1) {
-      decreaseQuantity(product.id, product.selectedColor, product.selectedSize);
+      addToCart({ ...product, quantity: product.quantity - 1 });
     } else {
-      removeFromCart(product.id, product.selectedColor, product.selectedSize);
+      removeFromCart(product.id);
     }
+  };
+
+  const handleIncrease = (product) => {
+    addToCart({ ...product, quantity: product.quantity + 1 });
   };
 
   // Button styling
@@ -53,12 +60,32 @@ function Cart() {
   const removeButtonStyle = {
     background: "transparent",
     color: "#dc3545",
-    border: "1px solid #dc3545",
+    border: "1px solid #dc3e50",
     padding: "8px 16px",
     fontWeight: "500",
     transition: "all 0.3s ease",
   };
 
+  // If the user is not signed in, display a message
+  if (!user) {
+    return (
+      <Container>
+        <div className="text-center mt-5">
+          <h2 className="display-6">
+            Cart is Available for Signed In Users Only
+          </h2>
+          <p className="mt-3">
+            Please <Link to="/login">sign in</Link> to view your cart.
+          </p>
+          <Link to={"/products"} className="btn mt-4" style={buttonStyle}>
+            <FontAwesomeIcon icon={faArrowLeft} /> Continue Shopping
+          </Link>
+        </div>
+      </Container>
+    );
+  }
+
+  // If the user is signed in, display the cart
   return (
     <Container>
       <h1 className="text-center mt-3">Cart</h1>
@@ -67,13 +94,7 @@ function Cart() {
         <div className="text-center mt-3">
           <div className="p-5" style={{ backgroundColor: "#f6f6f6" }}>
             <h2 className="display-5 mt-2">Your Cart is Empty</h2>
-            <Link
-              to={"/products"}
-              className="btn mt-4"
-              style={{
-                ...buttonStyle,
-              }}
-            >
+            <Link to={"/products"} className="btn mt-4" style={buttonStyle}>
               <FontAwesomeIcon icon={faArrowLeft} /> Continue Shopping
             </Link>
           </div>
@@ -91,7 +112,7 @@ function Cart() {
                     <div className="d-flex justify-content-center p-2">
                       <Card.Img
                         variant="top"
-                        src={product.image}
+                        src={product.pictureUrl}
                         style={{
                           width: "120px",
                           height: "150px",
@@ -102,7 +123,7 @@ function Cart() {
                   </Col>
                   <Col xs={5}>
                     <Card.Title className="text-center">
-                      {product.title}
+                      {product.name}
                     </Card.Title>
                     {product.selectedColor && product.selectedSize && (
                       <div className="text-center mt-2">
@@ -166,13 +187,7 @@ function Cart() {
                       </div>
                       <Button
                         variant="outline-dark"
-                        onClick={() =>
-                          increaseQuantity(
-                            product.id,
-                            product.selectedColor,
-                            product.selectedSize
-                          )
-                        }
+                        onClick={() => handleIncrease(product)}
                         style={quantityButtonStyle}
                         className="quantity-btn"
                       >

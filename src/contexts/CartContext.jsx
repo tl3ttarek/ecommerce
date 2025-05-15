@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
 
 const CartContext = createContext();
 
@@ -7,70 +7,117 @@ export const useCart = () => {
 };
 
 export const CartProvider = ({ children }) => {
-  const [cart, setCart] = useState([]);
+  const [items, setItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const addToCart = (product) => {
-    const existingProduct = cart.find(
-      (item) =>
-        item.id === product.id &&
-        item.selectedColor === product.selectedColor &&
-        item.selectedSize === product.selectedSize
-    );
+  const accessToken = localStorage.getItem("accessToken"); // Assuming accessToken is stored here
+  const apiUrl = "YOUR_API_URL"; // Replace with your actual API URL
+  const config = { apiUrl }; // You can manage your config object as needed
 
-    if (existingProduct) {
-      setCart(
-        cart.map((item) =>
-          item.id === product.id &&
-          item.selectedColor === product.selectedColor &&
-          item.selectedSize === product.selectedSize
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
-        )
-      );
-    } else {
-      setCart([...cart, { ...product, quantity: 1 }]);
+  const fetchCart = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await fetch(`${config.apiUrl}/v1/cart`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to fetch cart");
+      }
+      const data = await response.json();
+      setItems(data.data.items);
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const removeFromCart = (productId) => {
-    setCart(cart.filter((product) => product.id !== productId));
+  useEffect(() => {
+    if (accessToken) {
+      fetchCart();
+    } else {
+      setLoading(false);
+      setItems([]);
+    }
+  }, [accessToken]);
+
+  const addToCart = async (productId, quantity = 1) => {
+    try {
+      const response = await fetch(`${config.apiUrl}/v1/cart/items`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({ productId, quantity }),
+      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to add item to cart");
+      }
+      const data = await response.json();
+      setItems(data.data.items);
+    } catch (error) {
+      setError(error.message);
+    }
   };
 
-  const increaseQuantity = (productId, selectedColor, selectedSize) => {
-    setCart(
-      cart.map((item) =>
-        item.id === productId &&
-        item.selectedColor === selectedColor &&
-        item.selectedSize === selectedSize
-          ? { ...item, quantity: item.quantity + 1 }
-          : item
-      )
-    );
+  const removeFromCart = async (itemId) => {
+    try {
+      const response = await fetch(`${config.apiUrl}/v1/cart/items/${itemId}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to remove item from cart");
+      }
+      const data = await response.json();
+      setItems(data.data.items);
+    } catch (error) {
+      setError(error.message);
+      // Optionally handle error feedback to the user
+    }
   };
 
-  const decreaseQuantity = (productId, selectedColor, selectedSize) => {
-    setCart(
-      cart.map((item) =>
-        item.id === productId &&
-        item.selectedColor === selectedColor &&
-        item.selectedSize === selectedSize
-          ? { ...item, quantity: Math.max(1, item.quantity - 1) }
-          : item
-      )
-    );
-  };
+  // Since the API returns the updated cart after adding/removing,
+  // we don't necessarily need separate increase/decrease quantity functions
+  // that only update the local state. We can directly use addToCart
+  // with a quantity or implement a specific update quantity endpoint if needed.
 
-  const clearCart = () => {
-    setCart([]);
+  const clearCart = async () => {
+    try {
+      const response = await fetch(`${config.apiUrl}/v1/cart`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to clear cart");
+      }
+      setItems([]);
+    } catch (error) {
+      setError(error.message);
+    }
   };
 
   const values = {
-    cart,
+    items,
+    loading,
+    error,
     addToCart,
     removeFromCart,
-    increaseQuantity,
-    decreaseQuantity,
     clearCart,
+    refetchCart: fetchCart, // Exposing a function to manually refetch the cart
   };
 
   return <CartContext.Provider value={values}>{children}</CartContext.Provider>;
