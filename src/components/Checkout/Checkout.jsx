@@ -6,10 +6,10 @@ function Checkout() {
 
   useEffect(() => {
     // Simulate order processing delay
+    clearCart();
     setTimeout(() => {
       setShowSuccess(true);
     }, 500); // You can remove the timeout if you want it instant
-    clearCart(); // Clear the cart after order submission
   }, []);
 
   return (
