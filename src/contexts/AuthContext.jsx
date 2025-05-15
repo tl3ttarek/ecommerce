@@ -84,7 +84,7 @@ export function AuthProvider({ children }) {
         fullName: userData.data.fullName,
       });
 
-      navigate("/home");
+      navigate("/");
     } catch (error) {
       console.error(error);
       signOut();

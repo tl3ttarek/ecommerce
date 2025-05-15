@@ -1,31 +1,25 @@
-import { Container } from "react-bootstrap";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
-import { Link } from "react-router-dom";
-import CheckoutBody from "./CheckoutBody";
+import { useEffect, useState } from "react";
 
 function Checkout() {
-  const cart = [];
+  const [showSuccess, setShowSuccess] = useState(false);
+
+  useEffect(() => {
+    // Simulate order processing delay
+    setTimeout(() => {
+      setShowSuccess(true);
+    }, 500); // You can remove the timeout if you want it instant
+  }, []);
 
   return (
-    <Container className="mb-3">
-      {cart.length === 0 ? (
-        <>
-          <div className="text-center mt-3">
-            <h1>Checkout</h1>
-            <hr />
-            <div className="p-5" style={{ backgroundColor: "#f6f6f6" }}>
-              <h2 className="display-5 mt-2">No Items In Cart</h2>
-              <Link to={"/products"} className="btn btn-outline-dark mt-4">
-                <FontAwesomeIcon icon={faArrowLeft} /> Continue Shopping
-              </Link>
-            </div>
-          </div>
-        </>
-      ) : (
-        <CheckoutBody />
+    <div className="container mt-5">
+      {showSuccess && (
+        <div className="alert alert-success text-center fw-bold" role="alert">
+          ✅ Order submitted successfully!
+        </div>
       )}
-    </Container>
+      <h2 className="text-center">Checkout Page</h2>
+      {/* You can add order details or payment form here */}
+    </div>
   );
 }
 

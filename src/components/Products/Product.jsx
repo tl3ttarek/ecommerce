@@ -18,8 +18,6 @@ function Product({ products }) {
     color: "white",
   };
 
-  const accessToken = localStorage.getItem("accessToken");
-
   const handleAddToCart = async (product) => {
     if (!addToCart) {
       console.error("addToCart function is undefined. Check your CartContext.");
@@ -29,41 +27,9 @@ function Product({ products }) {
     setLoadingProductId(product.id);
     setCartError(null);
 
-    try {
-      const response = await fetch(`${config.apiUrl}/v1/cart/items`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
-        body: JSON.stringify({
-          productId: product.id,
-          quantity: 1,
-        }),
-      });
+    addToCart(product.id, 1);
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Failed to add to cart");
-      }
-
-      addToCart({
-        id: product.id,
-        name: product.name || product.title,
-        price: product.price,
-        quantity: 1,
-        selectedColor: "",
-        selectedSize: "",
-        pictureUrl: product.pictureUrl || product.image,
-      });
-
-      AddedToCartMsg();
-    } catch (error) {
-      setCartError(error.message);
-      console.error("Error adding to cart:", error);
-    } finally {
-      setLoadingProductId(null);
-    }
+    AddedToCartMsg();
   };
 
   if (!Array.isArray(products) || products.length === 0) {
