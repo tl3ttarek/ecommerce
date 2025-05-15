@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
-
+import { useCart } from "../../contexts/CartContext";
 function Checkout() {
   const [showSuccess, setShowSuccess] = useState(false);
+  const { clearCart } = useCart();
 
   useEffect(() => {
     // Simulate order processing delay
     setTimeout(() => {
       setShowSuccess(true);
     }, 500); // You can remove the timeout if you want it instant
+    clearCart(); // Clear the cart after order submission
   }, []);
 
   return (

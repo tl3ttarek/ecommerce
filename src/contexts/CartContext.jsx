@@ -67,6 +67,27 @@ export const CartProvider = ({ children }) => {
     }
   }, []);
 
+  const clearCart = async () => {
+    try {
+      const response = await fetch(`${config.apiUrl}/v1/cart`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to clear cart");
+      }
+
+      // Clear the local cart state
+      setItems([]);
+    } catch (error) {
+      setError(error.message);
+    }
+  };
+
   const addToCart = async (productId, quantity = 1) => {
     try {
       const response = await fetch(`${config.apiUrl}/v1/cart/items`, {
@@ -114,6 +135,7 @@ export const CartProvider = ({ children }) => {
     error,
     addToCart,
     removeFromCart,
+    clearCart,
     refetchCart: fetchCart,
   };
 
